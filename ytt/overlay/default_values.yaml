@@ -1,0 +1,19 @@
+#@data/values-schema
+---
+
+#@schema/nullable
+namespace: default
+replicaCount: 1
+hpa:
+  enabled: false
+  maxReplicas: 1
+  cpu: 90
+  memory: 246Mi
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  #@schema/nullable
+  limits:
+    cpu: 500m
+    memory: 6400Mi

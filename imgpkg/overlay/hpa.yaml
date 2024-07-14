@@ -1,0 +1,36 @@
+#@ load("@ytt:overlay","overlay")
+#@ load("@ytt:data","data")
+
+#@ if data.values.hpa.enabled:
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    app.kubernetes.io/name: example
+    app.kubernetes.io/version: 0.0.0-devel
+  name: example
+  #@ if hasattr(data.values, "namespace"):
+  namespace: #@ data.values.namespace
+  #@ end
+spec:
+  maxReplicas: #@ data.values.hpa.maxReplicas
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: #@ data.values.hpa.cpu
+        type: Utilization
+    type: Resource
+  - resource:
+      name: memory
+      target:
+        averageValue: #@ data.values.hpa.memory
+        type: AverageValue
+    type: Resource
+  minReplicas: #@ data.values.replicaCount
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: example
+ #@ end
+
